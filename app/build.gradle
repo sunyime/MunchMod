@@ -48,4 +48,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:9.0.0'
     compile 'com.yelp.clientlib:yelp-android:2.0.0'
     compile 'com.google.maps.android:android-maps-utils:0.3.4'
+    compile 'com.android.support:recyclerview-v7:23.2.1'
 }
