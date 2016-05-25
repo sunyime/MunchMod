@@ -1,7 +1,5 @@
 package com.cyngn.munchmod;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -17,19 +15,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.yelp.clientlib.connection.YelpAPI;
-import com.yelp.clientlib.connection.YelpAPIFactory;
 import com.yelp.clientlib.entities.Business;
-import com.yelp.clientlib.entities.SearchResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class MunchActivity extends FragmentActivity implements
@@ -93,12 +82,12 @@ public class MunchActivity extends FragmentActivity implements
         //TODO: set current location on map
         mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
         if (mMap != null) {
-            onLocationChanged(mCurrentLocation);
+            showLocation(mCurrentLocation);
         }
     }
 
     private static final double SEARCH_RADIUS = 5000;
-    private void onLocationChanged(LatLng latLng) {
+    private void showLocation(LatLng latLng) {
         // Add a marker in Sydney and move the camera
         mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -120,12 +109,13 @@ public class MunchActivity extends FragmentActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-       /* mMap.setOnMarkerDragListener(this);
+        mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnCameraChangeListener(this);
         mMap.setOnMapClickListener(this); */
         try {
             mMap.setMyLocationEnabled(true);
-        } catch (SecurityException se) {
+        }
+        catch (SecurityException se) {
             Log.d(TAG, "SecurityException for mMap.setMyLocationEnabled");
         }
         final UiSettings settings = mMap.getUiSettings();
@@ -135,7 +125,7 @@ public class MunchActivity extends FragmentActivity implements
         settings.setTiltGesturesEnabled(false);
 
         if (mCurrentLocation != null) {
-            onLocationChanged(mCurrentLocation);
+            showLocation(mCurrentLocation);
         }
     }
 
