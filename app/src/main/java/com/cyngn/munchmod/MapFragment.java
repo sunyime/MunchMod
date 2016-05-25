@@ -1,7 +1,10 @@
 package com.cyngn.munchmod;
 
+import com.google.android.gms.maps.SupportMapFragment;
+
 /**
- * MapFragment
+ * MapFragment: TODO: move all the google maps functionality
+ * here
  */
-public class MapFragment {
+public class MapFragment extends SupportMapFragment {
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yelp_api_consumer_key" templateMergeStrategy="preserve" translatable="false">rHKF_-M5Tq2KAjQWJ_pZtg</string>
+    <string name="yelp_api_consumer_secret" templateMergeStrategy="preserve" translatable="false">1G3r1Bui53041VXzY0pCwmGUnzc</string>
+    <string name="yelp_api_token" templateMergeStrategy="preserve" translatable="false">a3ECYgpDkYvj1rLywswanPsRueacpHX-</string>
+    <string name="yelp_api_token_secret" templateMergeStrategy="preserve" translatable="false">N3dR9XJKPvuhm1G9YfRIJByNP1g</string>
+</resources>
