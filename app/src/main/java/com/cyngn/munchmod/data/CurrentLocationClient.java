@@ -1,22 +1,22 @@
 package com.cyngn.munchmod.data;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.cyngn.munchmod.MunchApp;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import retrofit2.Callback;
 
 /**
  * Current Location Client
@@ -30,9 +30,11 @@ public class CurrentLocationClient implements
 
     private static final String TAG = "CurrentLocationLoader";
 
-    public interface ResultCallback {
-        void onCurrentLocation(Location location);
-    }
+    // Permissions
+    private static final String[] PERMISSIONS = new String[] {
+        Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+    };
 
     /**
      * Request Location Updates
@@ -44,8 +46,15 @@ public class CurrentLocationClient implements
 
 
     private Context mContext;
-    private List<ResultCallback> mCallbacks = new ArrayList<>();
     private GoogleApiClient mLocationClient = null;
+    private Location mLastLocation = null;
+
+    private boolean mNotifying = false;
+    private Set<ResultCallback> mCallbacks = new HashSet<>();
+
+    public interface ResultCallback {
+        void onCurrentLocation(Location location);
+    }
 
     public CurrentLocationClient(Context context) {
         mContext = context;
@@ -56,21 +65,67 @@ public class CurrentLocationClient implements
                 .build();
     }
 
-    public void addListener(CurrentLocationClient.ResultCallback callback) {
-        if (mCallbacks.size() == 0) {
+    /**
+     * requestPermissions: activity should call this when using CurrentLocationClient
+     * @param activity
+     */
+    public int requestPermissions(Activity activity) {
+        final int requestCode = MunchApp.REQUEST_CODE_CURRENT_LOCATION_PERMISSIONS;
+        ActivityCompat.requestPermissions(activity, PERMISSIONS, requestCode);
+        return requestCode;
+    }
 
+
+    public void addListener(final CurrentLocationClient.ResultCallback callback) {
+        if (mCallbacks.size() == 0) {
+            connect();
+        }
+        if (mNotifying) {
+            ((MunchApp)mContext.getApplicationContext()).getMainHandler().post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            mCallbacks.add(callback);
+                        }
+                    }
+            );
+        } else {
+            mCallbacks.add(callback);
         }
     }
 
-    public void removeListener(CurrentLocationClient.ResultCallback callback) {
-        //TODO: stop getting current location
+    public void removeListener(final CurrentLocationClient.ResultCallback callback) {
+
+        if (mCallbacks.size() == 1) {
+            disconnect();
+        }
+
+        if (mNotifying) {
+            ((MunchApp)mContext.getApplicationContext()).getMainHandler().post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            mCallbacks.remove(callback);
+                        }
+                    }
+            );
+        } else {
+            mCallbacks.remove(callback);
+        }
+    }
+
+    private void notifyListeners() {
+        mNotifying = true;
+        for (ResultCallback callback : mCallbacks) {
+            callback.onCurrentLocation(mLastLocation);
+        }
+        mNotifying = false;
     }
 
     /**
      * Wrapper State change Methods
      */
-    void connect() {
-
+    private void connect() {
         if (!mLocationClient.isConnected() &&
                 !mLocationClient.isConnecting()) {
             Log.d(TAG, "connect");
@@ -79,30 +134,28 @@ public class CurrentLocationClient implements
         }
     }
 
-    void requestLocation() {
-        /*
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }*/
+    private void disconnect() {
+        if (mLocationClient != null) {
+            Log.d(TAG, "disconnect");
+            mLocationClient.disconnect();
+        }
+    }
+
+    private void requestLocation() {
+
         try {
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mLocationClient, LOCATION_REQUEST, this);
         } catch (SecurityException se) {
-
+            Log.d(TAG, "calling activity must call CurrentLocationClient.requestPermissions " +
+                    "before adding itself as a listener " + se);
         }
     }
+
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "CurrentLocationLoader: onConnected: " + bundle);
         requestLocation();
-
     }
 
     @Override
@@ -117,7 +170,8 @@ public class CurrentLocationClient implements
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged received location=" + location);
         if (location != null) {
-            //TODO: figure out if
+            mLastLocation = location;
+            notifyListeners();
         }
     }
 
