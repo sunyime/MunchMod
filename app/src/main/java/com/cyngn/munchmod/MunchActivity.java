@@ -23,8 +23,7 @@ import java.util.List;
 
 public class MunchActivity extends FragmentActivity implements
         OnMapReadyCallback,
-        CurrentLocationClient.ResultCallback,
-        YelpApiClient.ResultCallback
+        CurrentLocationClient.ResultCallback
 {
 
     private static final String TAG = "MunchActivity";
@@ -49,7 +48,6 @@ public class MunchActivity extends FragmentActivity implements
         mapFragment.getMapAsync(this);
 
         mCurrentLocationClient.addListener(this);
-        mYelpApiClient.addListener(this);
 
     }
     @Override
@@ -130,17 +128,4 @@ public class MunchActivity extends FragmentActivity implements
         }
     }
 
-
-    /**
-     * Yelp Businesses received
-     * @param businesses
-     */
-    @Override
-    public void onBusinessesLoaded(List<Business> businesses) {
-        Log.d(TAG, "onBusinessesLoaded received " + businesses.size() + " businesses");
-        for (Business business : businesses) {
-            //TODO: show these in list view and map view
-            Log.d(TAG, "Business: " + business.name());
-        }
-    }
 }
