@@ -109,6 +109,7 @@ public class MunchActivity extends FragmentActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        /*
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnCameraChangeListener(this);
         mMap.setOnMapClickListener(this); */
