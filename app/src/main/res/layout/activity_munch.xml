@@ -13,5 +13,13 @@
         tools:context=".MunchActivity" />
 
     <!-- TODO: add another fragment for the listview -->
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:map="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/listview"
+              android:name="com.cyngn.munchmod.ListviewFragment"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".MunchActivity" />
 
 </FrameLayout>
