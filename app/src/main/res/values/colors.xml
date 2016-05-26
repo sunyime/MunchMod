@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="color_logo_bg">#EC0D0D</color>
-    <color name="color_logo_text">#607d8b</color>
+    <color name="color_logo_bg">#bd3535</color>
+    <color name="color_logo_text">#9cb9c7</color>
 </resources>

@@ -113,15 +113,16 @@ public class MapFragment extends SupportMapFragment implements
      * @param bundle
      * @return
      */
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
         if (DEBUG) {
             Log.d(TAG, "onCreateView");
         }
 
-        View mapView = super.onCreateView(inflater, viewGroup, bundle);
-        mContainer = mapView; //new FrameLayout(getActivity());
-       // mContainer.addView(mapView, new FrameLayout.LayoutParams(-1, -1));
+        mContainer = super.onCreateView(inflater, viewGroup, bundle);
+        // mContainer = new FrameLayout(getActivity());
+        // mContainer.addView(mapView, new FrameLayout.LayoutParams(-1, -1));
 
         // TODO: add more controls?
         /*
@@ -132,8 +133,9 @@ public class MapFragment extends SupportMapFragment implements
         */
         // Request the map
         getMapAsync(this);
-        return mapView;
+        return mContainer;
     }
+
 
     public void setLocationListener(MapLocationChangeListener listener) {
         mLocationListener = listener;
@@ -147,9 +149,19 @@ public class MapFragment extends SupportMapFragment implements
         return mContainer.getHeight();
     }
 
+
     public void setVisibility(int visibility) {
         mContainer.setVisibility(visibility);
     }
+
+        public void animateIn(long duration) {
+            mContainer.setAlpha(0f);
+            mContainer.animate().setDuration(duration).alpha(1f);
+        }
+
+        public void animateOut(long duration) {
+            mContainer.animate().setDuration(duration).alpha(0f);
+        }
 
     /**
      * LatLng of center pin

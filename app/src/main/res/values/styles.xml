@@ -10,6 +10,7 @@
 
     <style name="SplashText" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/color_logo_text</item>
-        <item name="android:textSize">26sp</item>
+        <item name="android:textSize">48sp</item>
+        <item name="android:textAlignment">center</item>
     </style>
 </resources>

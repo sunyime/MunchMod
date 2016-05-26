@@ -1,8 +1,11 @@
 package com.cyngn.munchmod;
 
+import android.animation.ValueAnimator;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 
 import com.cyngn.munchmod.data.CurrentLocationClient;
@@ -27,6 +30,8 @@ public class MunchActivity extends FragmentActivity implements
     private YelpApiClient mYelpApiClient;
     private CurrentLocationClient mCurrentLocationClient;
     private MapFragment mMapFragment;
+    private ListviewFragment mListFragment;
+    private ViewGroup mSplash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,11 @@ public class MunchActivity extends FragmentActivity implements
                 .findFragmentById(R.id.map);
 
         mMapFragment.setLocationListener(this);
+
+        mListFragment = (ListviewFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.listview);
+        
+        mSplash = (ViewGroup) findViewById(R.id.splash);
     }
 
     @Override
@@ -84,9 +94,19 @@ public class MunchActivity extends FragmentActivity implements
         //TODO
     }
 
+    private boolean isSplashVisible() {
+        return mSplash.getAlpha() > 0 && mSplash.getVisibility() == View.VISIBLE;
+    }
+
+    private static final long DURATION_MAP_SPLASH_CROSSFADE_MS = 450;
 
     @Override
     public void onMapLocationChanged(LatLng latLng) {
+        if (isSplashVisible()) {
+            mMapFragment.setVisibility(View.VISIBLE);
+            mMapFragment.animateIn(DURATION_MAP_SPLASH_CROSSFADE_MS);
+            mSplash.animate().setDuration(DURATION_MAP_SPLASH_CROSSFADE_MS).alpha(0f);
+        }
         mYelpApiClient.loadPlaces(LocationUtils.toBounds(latLng, SEARCH_RADIUS), getSearchTerms());
     }
 
