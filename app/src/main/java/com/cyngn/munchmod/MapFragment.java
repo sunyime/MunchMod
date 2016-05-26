@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.graphics.Point;
 
 import com.cyngn.munchmod.data.CurrentLocationClient;
-import com.cyngn.munchmod.utils.LocationUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,7 +23,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.SphericalUtil;
 import com.yelp.clientlib.entities.Business;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * MapFragment: TODO: move all the google maps functionality
@@ -43,7 +44,7 @@ public class MapFragment extends SupportMapFragment implements
     private static final boolean DEBUG = true;
 
     // Constants
-    private static final float MAP_DEFAULT_ZOOM_LEVEL = 16;
+    private static final float MAP_DEFAULT_ZOOM_LEVEL = 15;
     private static final float MAP_INVALID_ZOOM_LEVEL = 0;
 
     private static final int MAP_CAMERA_ZOOM_DURATION_MS = 350;         //for zooming to a zoomlevel
@@ -61,8 +62,10 @@ public class MapFragment extends SupportMapFragment implements
         /**
      * Called when center of the map has changed
      */
-    public interface MapLocationChangeListener {
+    public interface MapListener {
         void onMapLocationChanged(LatLng location);
+        void onMapItemClicked(Business business);
+        void onMapClicked();
     }
 
 
@@ -74,8 +77,9 @@ public class MapFragment extends SupportMapFragment implements
     private float mPrevZoomLevel = MAP_INVALID_ZOOM_LEVEL;
     private float mZoomLevel = MAP_DEFAULT_ZOOM_LEVEL;
     private boolean mIsSelfCameraChange = false;
+    private Map<Marker, Business> mMarkerMap = new HashMap<>();
 
-    private MapLocationChangeListener mLocationListener = null;
+    private MapListener mListener = null;
 
     private GoogleMap.CancelableCallback mCameraUpdateCallback =  new GoogleMap.CancelableCallback() {
 
@@ -137,8 +141,8 @@ public class MapFragment extends SupportMapFragment implements
     }
 
 
-    public void setLocationListener(MapLocationChangeListener listener) {
-        mLocationListener = listener;
+    public void setLocationListener(MapListener listener) {
+        mListener = listener;
     }
 
     public int getMapWidth() {
@@ -154,14 +158,14 @@ public class MapFragment extends SupportMapFragment implements
         mContainer.setVisibility(visibility);
     }
 
-        public void animateIn(long duration) {
-            mContainer.setAlpha(0f);
-            mContainer.animate().setDuration(duration).alpha(1f);
-        }
+    public void animateIn(long duration) {
+        mContainer.setAlpha(0f);
+        mContainer.animate().setDuration(duration).alpha(1f);
+    }
 
-        public void animateOut(long duration) {
-            mContainer.animate().setDuration(duration).alpha(0f);
-        }
+    public void animateOut(long duration) {
+        mContainer.animate().setDuration(duration).alpha(0f);
+    }
 
     /**
      * LatLng of center pin
@@ -231,6 +235,7 @@ public class MapFragment extends SupportMapFragment implements
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnCameraChangeListener(this);
         mMap.setOnMapClickListener(this);
+        mMap.setOnMarkerClickListener(this);
         try {
             mMap.setMyLocationEnabled(true);
         }
@@ -269,7 +274,7 @@ public class MapFragment extends SupportMapFragment implements
         // TODO: user is changing map location, kick off another
         // User has moved pin to new location
         final LatLng latLng = getCenterLatLng();
-        if (SphericalUtil.computeDistanceBetween(latLng, mLatLng) < 500) {
+        if (SphericalUtil.computeDistanceBetween(latLng, mLatLng) < 5000) {
             return;
         }
         if (DEBUG) {
@@ -286,6 +291,9 @@ public class MapFragment extends SupportMapFragment implements
         if (DEBUG) {
             Log.d(TAG, "onMapClick latLng=" + latLng);
         }
+        if (mListener != null) {
+            mListener.onMapClicked();
+        }
     }
 
     @Override
@@ -293,8 +301,10 @@ public class MapFragment extends SupportMapFragment implements
         if (DEBUG) {
             Log.d(TAG, "onMarkerClick " + marker);
         }
-        //TODO: display the business in the list
-        //updateLocation(marker.getPosition(), true);
+
+        if (mListener != null) {
+            mListener.onMapItemClicked(mMarkerMap.get(marker));
+        }
         return false;
     }
 
@@ -322,16 +332,22 @@ public class MapFragment extends SupportMapFragment implements
      * @param businesses
      */
     public void showBusinesses(List<Business> businesses) {
-        Log.d(TAG, "onBusinessesLoaded received " + businesses.size() + " businesses");
+        if (DEBUG) {
+            Log.d(TAG, "onBusinessesLoaded received " + businesses.size() + " businesses");
+        }
         mMap.clear();
+        mMarkerMap.clear();
         Marker marker = null;
-        LatLngBounds.Builder builder = LatLngBounds.builder();
+        // TODO: center the map to the latLng bounds of these businesses
+        //LatLngBounds.Builder builder = LatLngBounds.builder();
         for (Business business : businesses) {
-            //TODO: show these in list view and map view
             LatLng latLng = new LatLng(business.location().coordinate().latitude(),
                     business.location().coordinate().longitude());
             marker = mMap.addMarker(businessToMarker(business, latLng));
+            mMarkerMap.put(marker, business);
             Log.d(TAG, "Business: " + business.name() + " marker=" + marker);
+
+            //TODO: add the markers and business to a map
         }
     }
 
@@ -348,8 +364,8 @@ public class MapFragment extends SupportMapFragment implements
         if (mapUpdateNeeded) {
             showLocation();
         }
-        if (mLocationListener != null) {
-            mLocationListener.onMapLocationChanged(mLatLng);
+        if (mListener != null) {
+            mListener.onMapLocationChanged(mLatLng);
         }
     }
 
@@ -412,8 +428,6 @@ public class MapFragment extends SupportMapFragment implements
                         mCameraUpdateCallback);
             }
         }
-
     }
-
 }
 

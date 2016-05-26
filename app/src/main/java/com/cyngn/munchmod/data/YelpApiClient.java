@@ -114,7 +114,7 @@ public class YelpApiClient {
 
         // general params
         params.put("term", searchTerms);
-        params.put("limit", "10");
+        params.put("limit", "6");
         params.put("actionlinks", "true");
         params.put("radius_filter", "5000");
 

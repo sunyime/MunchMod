@@ -1,37 +1,40 @@
 package com.cyngn.munchmod;
 
-import android.animation.ValueAnimator;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
 import com.cyngn.munchmod.data.CurrentLocationClient;
 import com.cyngn.munchmod.data.YelpApiClient;
 import com.cyngn.munchmod.utils.LocationUtils;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.squareup.picasso.Picasso;
 import com.yelp.clientlib.entities.Business;
 
 import java.util.List;
 
 
 public class MunchActivity extends FragmentActivity implements
-        MapFragment.MapLocationChangeListener,
+        MapFragment.MapListener,
         YelpApiClient.ResultCallback
 {
     private static final boolean DEBUG = false;
     private static final String TAG = "MunchActivity";
 
     private static final double SEARCH_RADIUS = 5000; //I think this is 5km?
+    private static final long DURATION_MAP_SPLASH_CROSSFADE_MS = 450;
+    private static final long DURATION_LIST_FADE_MS = 250;
 
     private YelpApiClient mYelpApiClient;
     private CurrentLocationClient mCurrentLocationClient;
     private MapFragment mMapFragment;
     private ListviewFragment mListFragment;
     private ViewGroup mSplash;
+    private ViewGroup mTempItemPlaceHolder; //temp: to be replaced by the list
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +57,11 @@ public class MunchActivity extends FragmentActivity implements
 
         mListFragment = (ListviewFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.listview);
-        
+
         mSplash = (ViewGroup) findViewById(R.id.splash);
+
+        mTempItemPlaceHolder = (ViewGroup) findViewById(R.id.item_placeholder);
+
     }
 
     @Override
@@ -94,25 +100,19 @@ public class MunchActivity extends FragmentActivity implements
         //TODO
     }
 
-    private boolean isSplashVisible() {
-        return mSplash.getAlpha() > 0 && mSplash.getVisibility() == View.VISIBLE;
-    }
-
-    private static final long DURATION_MAP_SPLASH_CROSSFADE_MS = 450;
 
     @Override
     public void onMapLocationChanged(LatLng latLng) {
         if (isSplashVisible()) {
-            mMapFragment.setVisibility(View.VISIBLE);
             mMapFragment.animateIn(DURATION_MAP_SPLASH_CROSSFADE_MS);
             mSplash.animate().setDuration(DURATION_MAP_SPLASH_CROSSFADE_MS).alpha(0f);
+            //TODO: set splash visibility to GONE
         }
         mYelpApiClient.loadPlaces(LocationUtils.toBounds(latLng, SEARCH_RADIUS), getSearchTerms());
     }
 
-    @Override
-    public void onBusinessesLoaded(List<Business> businesses) {
-        mMapFragment.showBusinesses(businesses);
+    private boolean isSplashVisible() {
+        return mSplash.getAlpha() > 0 && mSplash.getVisibility() == View.VISIBLE;
     }
 
     // Get a comma delimited list of search terms
@@ -150,4 +150,35 @@ public class MunchActivity extends FragmentActivity implements
         }
         return builder.toString();
     }
+
+    @Override
+    public void onBusinessesLoaded(List<Business> businesses) {
+        mMapFragment.showBusinesses(businesses);
+    }
+
+    @Override
+    public void onMapItemClicked(Business business) {
+        //TODO: show the list instead
+        // mListFragment.show();
+        // mListFragment.scrollTo(itemId);
+        showBusinessDetails(business);
+    }
+
+    @Override
+    public void onMapClicked() {
+        mTempItemPlaceHolder.animate().setDuration(DURATION_LIST_FADE_MS).alpha(0);
+    }
+
+    private void showBusinessDetails(Business business) {
+        Log.d(TAG, "showBusinessDetails");
+        ImageView iv = (ImageView) mTempItemPlaceHolder.findViewById(R.id.item_icon);
+        Picasso.with(this).load(business.imageUrl()).into(iv);
+
+        mTempItemPlaceHolder.setVisibility(View.VISIBLE);
+        if (mTempItemPlaceHolder.getAlpha() < 1f) {
+            mTempItemPlaceHolder.animate().setDuration(DURATION_LIST_FADE_MS).alpha(1);
+        }
+    }
+
+
 }

@@ -49,4 +49,5 @@ dependencies {
     compile 'com.yelp.clientlib:yelp-android:2.0.0'
     compile 'com.google.maps.android:android-maps-utils:0.3.4'
     compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
