@@ -40,4 +40,8 @@ public class LocationUtils {
                 MAP_MAX_NEGLIGIBLE_OFFSET);
 
     }
+
+    public static double computeDistance(LatLng latLng1, LatLng latLng2) {
+        return SphericalUtil.computeDistanceBetween(latLng1, latLng2);
+    }
 }

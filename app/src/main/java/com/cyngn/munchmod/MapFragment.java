@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.graphics.Point;
 
 import com.cyngn.munchmod.data.CurrentLocationClient;
@@ -20,6 +19,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 import com.yelp.clientlib.entities.Business;
 
 import java.util.List;
@@ -33,7 +35,9 @@ public class MapFragment extends SupportMapFragment implements
         OnMapReadyCallback,
         GoogleMap.OnCameraChangeListener,
         GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMapClickListener {
+        GoogleMap.OnMapClickListener,
+        GoogleMap.OnMarkerClickListener
+    {
 
     private static final String TAG = "MapFragment";
     private static final boolean DEBUG = true;
@@ -52,16 +56,18 @@ public class MapFragment extends SupportMapFragment implements
      */
     private static final long MAX_CURRENT_LOCATION_AGE_MILLIS = 5000; //allow 5s before the old location is invalidated
 
-    /**
+
+
+        /**
      * Called when center of the map has changed
      */
     public interface MapLocationChangeListener {
-        void onMapLocationChanged(LatLng latLng);
+        void onMapLocationChanged(LatLng location);
     }
 
 
     private GoogleMap mMap;
-    private ViewGroup mContainer;
+    private View mContainer;
     private LatLng mLatLng;
     private Point mCenterPoint;
     private LatLngBounds mLatLngBounds;
@@ -114,7 +120,7 @@ public class MapFragment extends SupportMapFragment implements
         }
 
         View mapView = super.onCreateView(inflater, viewGroup, bundle);
-        mContainer = viewGroup; //new FrameLayout(getActivity());
+        mContainer = mapView; //new FrameLayout(getActivity());
        // mContainer.addView(mapView, new FrameLayout.LayoutParams(-1, -1));
 
         // TODO: add more controls?
@@ -141,6 +147,10 @@ public class MapFragment extends SupportMapFragment implements
         return mContainer.getHeight();
     }
 
+    public void setVisibility(int visibility) {
+        mContainer.setVisibility(visibility);
+    }
+
     /**
      * LatLng of center pin
      * @return
@@ -160,8 +170,10 @@ public class MapFragment extends SupportMapFragment implements
         ((MunchApp) getActivity().getApplication()).getCurrentLocationClient().removeListener(this);
     }
 
+
     @Override
     public void onPause() {
+
         if (DEBUG) {
             Log.d(TAG, "onPause");
         }
@@ -237,7 +249,7 @@ public class MapFragment extends SupportMapFragment implements
         mPrevZoomLevel = cameraPosition.zoom;
 
         // Our own camera change
-        if (mIsSelfCameraChange) {
+        if (mIsSelfCameraChange || mLatLng == null) {
             mIsSelfCameraChange = false;
             return;
         }
@@ -245,7 +257,7 @@ public class MapFragment extends SupportMapFragment implements
         // TODO: user is changing map location, kick off another
         // User has moved pin to new location
         final LatLng latLng = getCenterLatLng();
-        if (LocationUtils.isNegligibleLocationChange(latLng, mLatLng)) {
+        if (SphericalUtil.computeDistanceBetween(latLng, mLatLng) < 500) {
             return;
         }
         if (DEBUG) {
@@ -262,6 +274,16 @@ public class MapFragment extends SupportMapFragment implements
         if (DEBUG) {
             Log.d(TAG, "onMapClick latLng=" + latLng);
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (DEBUG) {
+            Log.d(TAG, "onMarkerClick " + marker);
+        }
+        //TODO: display the business in the list
+        //updateLocation(marker.getPosition(), true);
+        return false;
     }
 
     /**
@@ -289,10 +311,23 @@ public class MapFragment extends SupportMapFragment implements
      */
     public void showBusinesses(List<Business> businesses) {
         Log.d(TAG, "onBusinessesLoaded received " + businesses.size() + " businesses");
+        mMap.clear();
+        Marker marker = null;
+        LatLngBounds.Builder builder = LatLngBounds.builder();
         for (Business business : businesses) {
             //TODO: show these in list view and map view
-            Log.d(TAG, "Business: " + business.name());
+            LatLng latLng = new LatLng(business.location().coordinate().latitude(),
+                    business.location().coordinate().longitude());
+            marker = mMap.addMarker(businessToMarker(business, latLng));
+            Log.d(TAG, "Business: " + business.name() + " marker=" + marker);
         }
+    }
+
+    private static MarkerOptions businessToMarker(Business business, LatLng latLng) {
+        return new MarkerOptions()
+                .position(latLng)
+                .title(business.name())
+                .snippet(business.snippetText());
     }
 
 

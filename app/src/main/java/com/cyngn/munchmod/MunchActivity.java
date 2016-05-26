@@ -9,6 +9,7 @@ import com.cyngn.munchmod.data.CurrentLocationClient;
 import com.cyngn.munchmod.data.YelpApiClient;
 import com.cyngn.munchmod.utils.LocationUtils;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.yelp.clientlib.entities.Business;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class MunchActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
 
         mYelpApiClient = ((MunchApp)getApplication()).getYelpApiClient();
+        mYelpApiClient.addListener(this);
         mCurrentLocationClient = ((MunchApp)getApplication()).getCurrentLocationClient();
         mCurrentLocationClient.requestPermissions(this);
 
@@ -85,7 +87,7 @@ public class MunchActivity extends FragmentActivity implements
 
     @Override
     public void onMapLocationChanged(LatLng latLng) {
-        mYelpApiClient.loadPlaces(LocationUtils.toBounds(latLng, SEARCH_RADIUS));
+        mYelpApiClient.loadPlaces(LocationUtils.toBounds(latLng, SEARCH_RADIUS), getSearchTerms());
     }
 
     @Override
@@ -93,4 +95,39 @@ public class MunchActivity extends FragmentActivity implements
         mMapFragment.showBusinesses(businesses);
     }
 
+    // Get a comma delimited list of search terms
+    private String getSearchTerms() {
+        // TODO: concatenate the time of day
+        final String terms[] = new String[] {
+                "food",
+                getTimeOfDayTerm(),
+                getUserEntryTerm(),
+        };
+        return termsToString(terms);
+    }
+
+    private String getTimeOfDayTerm() {
+        return "lunch";
+    }
+
+    private String getUserEntryTerm() {
+        return null;
+    }
+
+    private static String termsToString(String[] terms) {
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (String term : terms) {
+            if (term == null || term.isEmpty()) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(",");
+            } else {
+                isFirst = false;
+            }
+            builder.append(term);
+        }
+        return builder.toString();
+    }
 }

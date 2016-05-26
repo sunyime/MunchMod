@@ -96,11 +96,13 @@ public class YelpApiClient {
     private SearchCallback mSearchCallback = new SearchCallback();
 
 
+    private static final String SORT_DISTANCE = "1";
+    private static final String SORT_HIGHEST_RATED = "2";
     /**
      * Reload places
      * @param latLngBounds
      */
-    public void loadPlaces(LatLngBounds latLngBounds) {
+    public void loadPlaces(LatLngBounds latLngBounds, String searchTerms) {
 
         BoundingBoxOptions bounds = BoundingBoxOptions.builder()
                 .swLatitude(latLngBounds.southwest.latitude)
@@ -109,9 +111,12 @@ public class YelpApiClient {
                 .neLongitude(latLngBounds.northeast.longitude).build();
 
         Map<String, String> params = new HashMap<>();
+
         // general params
-        params.put("term", "food");
-        params.put("limit", "3");
+        params.put("term", searchTerms);
+        params.put("limit", "10");
+        params.put("actionlinks", "true");
+        params.put("radius_filter", "5000");
 
         Call<SearchResponse> call = mYelpApi.search(bounds, params);
         call.enqueue(mSearchCallback);
