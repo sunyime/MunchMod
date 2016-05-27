@@ -212,6 +212,10 @@ public class MapFragment extends SupportMapFragment implements
         startCurrentLocation();
     }
 
+
+    public void setMapIconPadding(float percentage){
+        mMap.setPadding(0,0,0, (int)(650*percentage));
+    }
     @Override
     public void onCurrentLocation(Location location) {
         if (DEBUG) {

@@ -15,10 +15,7 @@ import com.yelp.clientlib.entities.Business;
 import com.yelp.clientlib.entities.SearchResponse;
 import com.yelp.clientlib.entities.options.BoundingBoxOptions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,6 +73,15 @@ public class YelpApiClient {
             Log.d(TAG, "SearchResponse: " + response.message());
             Log.d(TAG, "SearchResponse: " + response.body());
             mBusinesses = response.body().businesses();
+            Collections.sort(mBusinesses, new Comparator<Business>() {
+                @Override
+                public int compare(Business lhs, Business rhs) {
+                    double d1 = lhs.location().coordinate().longitude() ;
+                    double d2 = rhs.location().coordinate().longitude();
+                    if(d1 < d2) return -1;
+                    else return 1;
+                }
+            });
             for (ResultCallback resultCallback : mCallbackList) {
                 resultCallback.onBusinessesLoaded(mBusinesses);
             }

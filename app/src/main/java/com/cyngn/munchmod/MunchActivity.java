@@ -1,5 +1,8 @@
 package com.cyngn.munchmod;
 
+import android.animation.AnimatorInflater;
+import android.animation.FloatArrayEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -43,7 +46,7 @@ public class MunchActivity extends FragmentActivity implements
     private MapFragment mMapFragment;
     private ViewPager mBusinessPager;
     private BusinessPagerAdapter mBusinessAdapter;
-
+    ValueAnimator animator ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,20 @@ public class MunchActivity extends FragmentActivity implements
         mSplash = (ViewGroup) findViewById(R.id.splash);
         TextView splashText = (TextView) findViewById(R.id.splash_text);
         MunchCustomizer.setSplashText(splashText);
+
+
+        animator = (ValueAnimator) AnimatorInflater.loadAnimator(this,R.animator.slide_in);
+
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float cur = animation.getAnimatedFraction();
+                //TODO: DON'T USE CONSTANT.
+                mBusinessPager.getLayoutParams().height = (int)(650*cur);
+                mMapFragment.setMapIconPadding(cur);
+                mBusinessPager.requestLayout();
+            }
+        });
        /* final String action = getIntent().getAction();
         if (action != null) {
             TextView splashText = (TextView) findViewById(R.id.splash_text);
@@ -160,6 +177,9 @@ public class MunchActivity extends FragmentActivity implements
     @Override
     public void onMapClicked() {
         // mBusinessPager.animate().setDuration(DURATION_LIST_FADE_MS).alpha(0);
+        if(mBusinessPager.getVisibility() == View.GONE) return;
+        mBusinessPager.setVisibility(View.GONE);
+        animator.reverse();
     }
 
     @Override
@@ -169,13 +189,21 @@ public class MunchActivity extends FragmentActivity implements
 
 
     private void showBusinessDetails(Business business) {
+
         if (DEBUG) {
             Log.d(TAG, "showBusinessDetails");
         }
         int pos = mYelpApiClient.getPositionForBusiness(business);
-        if (pos >= 0) {
-            mBusinessPager.setCurrentItem(pos, true);
-        }
+        if(pos < 0) return;
+        mBusinessPager.setCurrentItem(pos, true);
+        if(mBusinessPager.getVisibility() == View.VISIBLE) return;
+
+        mBusinessPager.setVisibility(View.VISIBLE);
+
+
+        Log.d(TAG, "starting animation");
+        animator.start();
+
     }
 
     @Override
