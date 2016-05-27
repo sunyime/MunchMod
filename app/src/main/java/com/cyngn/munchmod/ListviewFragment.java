@@ -39,10 +39,10 @@ public class ListviewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.munchy_listview, null);
         rootView.setTag(FRAGMENT_TAG);
 
-        RecyclerView recylerView = (RecyclerView)rootView.findViewById(R.id.recylerlist);
+       // RecyclerView recylerView = (RecyclerView)rootView.findViewById(R.id.recylerlist);
 
-        recylerView.setAdapter(new MunchyAdapter());
-        recylerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+     //   recylerView.setAdapter(new MunchyAdapter());
+       // recylerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;
     }

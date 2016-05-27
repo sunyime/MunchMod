@@ -2,6 +2,10 @@ package com.cyngn.munchmod;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,7 @@ import android.widget.ImageView;
 
 
 import com.cyngn.munchmod.data.CurrentLocationClient;
+import com.cyngn.munchmod.data.MunchyAdapter;
 import com.cyngn.munchmod.data.YelpApiClient;
 import com.cyngn.munchmod.utils.LocationUtils;
 import com.google.android.gms.maps.model.LatLng;
@@ -20,7 +25,8 @@ import java.util.List;
 
 public class MunchActivity extends FragmentActivity implements
         MapFragment.MapListener,
-        YelpApiClient.ResultCallback
+        YelpApiClient.ResultCallback,
+        ViewPager.OnPageChangeListener
 {
     private static final boolean DEBUG = false;
     private static final String TAG = "MunchActivity";
@@ -35,6 +41,9 @@ public class MunchActivity extends FragmentActivity implements
     private ListviewFragment mListFragment;
     private ViewGroup mSplash;
     private ViewGroup mTempItemPlaceHolder; //temp: to be replaced by the list
+
+    private ViewPager mPager;
+    BusinessPageAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +64,16 @@ public class MunchActivity extends FragmentActivity implements
 
         mMapFragment.setLocationListener(this);
 
-        mListFragment = (ListviewFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.listview);
-
         mSplash = (ViewGroup) findViewById(R.id.splash);
 
         mTempItemPlaceHolder = (ViewGroup) findViewById(R.id.item_placeholder);
+         mPager = (ViewPager)mTempItemPlaceHolder.findViewById(R.id.pager);
+         mAdapter = new BusinessPageAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mAdapter);
+
+
+        mYelpApiClient.addListener(mAdapter);
+
 
     }
 
@@ -171,8 +184,11 @@ public class MunchActivity extends FragmentActivity implements
 
     private void showBusinessDetails(Business business) {
         Log.d(TAG, "showBusinessDetails");
-        ImageView iv = (ImageView) mTempItemPlaceHolder.findViewById(R.id.item_icon);
-        Picasso.with(this).load(business.imageUrl()).into(iv);
+       // ImageView iv = (ImageView) mTempItemPlaceHolder.findViewById(R.id.item_icon);
+        //Picasso.with(this).load(business.imageUrl()).into(iv);
+        int pos = mAdapter.getPositionForBusiness(business);
+        mPager.setCurrentItem(pos, true);
+
 
         mTempItemPlaceHolder.setVisibility(View.VISIBLE);
         if (mTempItemPlaceHolder.getAlpha() < 1f) {
@@ -181,4 +197,18 @@ public class MunchActivity extends FragmentActivity implements
     }
 
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        Log.d(TAG, "page selected.....");
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }
