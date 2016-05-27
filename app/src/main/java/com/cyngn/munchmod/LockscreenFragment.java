@@ -1,6 +1,7 @@
 package com.cyngn.munchmod;
 
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cyngn.munchmod.utils.AndroidUtils;
 import com.squareup.picasso.Picasso;
 import com.yelp.clientlib.entities.Business;
 
@@ -41,11 +43,13 @@ public class LockscreenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         int position = getArguments().getInt("position");
-        Resources res = getResources();
         ViewGroup vg = (ViewGroup)inflater.inflate(R.layout.lockscreen_listitem, container, false);
 
         if (position == 0) {
             View v = vg.findViewById(R.id.data_container);
+            v.setVisibility(View.GONE);
+
+            v = vg.findViewById(R.id.background_overlay);
             v.setVisibility(View.GONE);
         }
         else {
@@ -77,6 +81,58 @@ public class LockscreenFragment extends Fragment {
 
             tv = (TextView) vg.findViewById(R.id.snippet_text);
             tv.setText(business.snippetText());
+
+            //
+            tv = (TextView) vg.findViewById(R.id.map_action);
+            final String geoUri = "geo:0,0?q=" + business.location().coordinate().latitude()
+                    + ","
+                    + business.location().coordinate().longitude()
+                    + "("
+                    + business.location().displayAddress().get(0)
+                    + ")";
+
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AndroidUtils.startUriActivity(getActivity(), geoUri);
+                }
+            });
+
+            //TODO: get distance text
+            tv = (TextView) vg.findViewById(R.id.takeout_action);
+            if (business.eat24Url() != null) {
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AndroidUtils.startUriActivity(getActivity(), business.eat24Url());
+                    }
+                });
+            }
+            else {
+                tv.setVisibility(View.GONE);
+            }
+
+            tv = (TextView) vg.findViewById(R.id.takeout_action);
+            if (business.reservationUrl() != null) {
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AndroidUtils.startUriActivity(getActivity(), business.reservationUrl());
+                    }
+                });
+            }
+            else {
+                tv.setVisibility(View.GONE);
+            }
+
+            tv = (TextView) vg.findViewById(R.id.call_action);
+            //tv.setText(business.displayPhone());
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AndroidUtils.startCallActivity(getActivity(), business.phone());
+                }
+            });
         }
 
         return vg;

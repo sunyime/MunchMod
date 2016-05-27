@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -53,5 +54,31 @@ public class AndroidUtils {
         }
         return false;
 
+    }
+
+    /**
+     * Start a Call activity
+     */
+    public static boolean startCallActivity(Context context, String phone) {
+        Intent i = new Intent(Intent.ACTION_CALL);
+        i.setData(Uri.parse("tel:" + phone));
+        return startActivity(context, i);
+    }
+
+
+    /**
+     * Start an URI activity
+     */
+    public static boolean startUriActivity(Context context, Uri uri) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(uri);
+        return startActivity(context, i);
+    }
+
+    /**
+     * Start an URI activity
+     */
+    public static boolean startUriActivity(Context context, String url) {
+        return startUriActivity(context, Uri.parse(url));
     }
 }

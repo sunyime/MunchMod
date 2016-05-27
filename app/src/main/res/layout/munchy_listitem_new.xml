@@ -16,9 +16,10 @@
             android:id="@+id/item_icon"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/single_padding"
-            android:background="@color/color_logo_bg"/>
+            android:layout_gravity="left|center_vertical"
+            android:paddingRight="@dimen/single_padding"
+            android:layout_marginTop="@dimen/single_padding"
+            android:layout_marginBottom="@dimen/single_padding" />
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -50,80 +51,81 @@
                 android:text="Category"
                 android:paddingLeft="@dimen/single_padding"
                 android:paddingRight="@dimen/single_padding"/ -->
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:layout_marginTop="@dimen/double_padding"
+                android:paddingLeft="@dimen/double_padding"
+                android:paddingBottom="@dimen/half_padding">
+
+                <TableRow android:id="@+id/address_row"
+                    android:padding="@dimen/single_padding"
+                    android:layout_gravity="fill_horizontal"
+                    android:gravity="left">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_dialog_map"
+                        android:padding="@dimen/half_padding"/>
+                    <TextView
+                        android:id="@+id/address_text"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:padding="@dimen/half_padding"
+                        android:text="322 St. Martin Dr"
+                        android:autoLink="map"/>
+                </TableRow>
+                <TableRow android:id="@+id/phone_row"
+                    android:paddingLeft="@dimen/single_padding"
+                    android:paddingRight="@dimen/single_padding"
+                    android:layout_gravity="fill_horizontal"
+                    android:gravity="left">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/half_padding"
+                        android:src="@android:drawable/ic_dialog_dialer"/>
+                    <TextView
+                        android:id="@+id/phone_text"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:padding="@dimen/half_padding"
+                        android:text="415-5559463"
+                        android:autoLink="phone"/>
+                </TableRow>
+                <TableRow
+                    android:id="@+id/takeouturl_row"
+                    android:paddingLeft="@dimen/single_padding"
+                    android:paddingRight="@dimen/single_padding"
+                    android:paddingBottom="@dimen/single_padding"
+                    android:layout_gravity="fill_horizontal"
+                    android:gravity="left">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/half_padding"
+                        android:src="@android:drawable/ic_menu_search"/>
+
+                    <TextView
+                        android:id="@+id/takeouturl_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="right"
+                        android:padding="@dimen/half_padding"
+                        android:autoLink="web"
+                        />
+                </TableRow>
+
+            </TableLayout>
 
         </LinearLayout>
     </LinearLayout>
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:layout_marginTop="@dimen/double_padding"
-        android:paddingLeft="@dimen/double_padding"
-        android:paddingBottom="@dimen/half_padding">
 
-        <TableRow android:id="@+id/address_row"
-            android:padding="@dimen/single_padding"
-            android:layout_gravity="fill_horizontal"
-            android:gravity="left">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_dialog_map"
-                android:padding="@dimen/half_padding"/>
-            <TextView
-                android:id="@+id/address_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:padding="@dimen/half_padding"
-                android:text="322 St. Martin Dr"
-                android:autoLink="map"/>
-        </TableRow>
-        <TableRow android:id="@+id/phone_row"
-            android:paddingLeft="@dimen/single_padding"
-            android:paddingRight="@dimen/single_padding"
-            android:layout_gravity="fill_horizontal"
-            android:gravity="left">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/half_padding"
-                android:src="@android:drawable/ic_dialog_dialer"/>
-            <TextView
-                android:id="@+id/phone_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:padding="@dimen/half_padding"
-                android:text="415-5559463"
-                android:autoLink="phone"/>
-        </TableRow>
-        <TableRow
-            android:id="@+id/takeouturl_row"
-            android:paddingLeft="@dimen/single_padding"
-            android:paddingRight="@dimen/single_padding"
-            android:paddingBottom="@dimen/single_padding"
-            android:layout_gravity="fill_horizontal"
-            android:gravity="left">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/half_padding"
-                android:src="@android:drawable/ic_menu_search"/>
-
-            <TextView
-                android:id="@+id/takeouturl_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:gravity="right"
-                android:padding="@dimen/half_padding"
-                android:autoLink="web"
-                />
-        </TableRow>
-
-    </TableLayout>
 </LinearLayout>

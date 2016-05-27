@@ -9,10 +9,10 @@
 
     <color name="color_text">#FFFFFF</color>
     <color name="color_overlay">#0C000000</color>
+    <color name="color_black_25">#3F000000</color>
     <color name="white_54">#8AFFFFFF</color>
     <color name="white_26">#42FFFFFF</color>
     <color name="white">#FFFFFFFF</color>
-
 
 
     <color name="divider_color">@color/white_54</color>

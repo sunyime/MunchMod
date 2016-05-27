@@ -381,7 +381,7 @@ public class MapFragment extends SupportMapFragment implements
         return new MarkerOptions()
                 .position(latLng)
                 .title(business.name())
-                .snippet(business.snippetText());
+                .snippet(business.location().address().get(0));
     }
 
     private Marker findMarker(Business business) {

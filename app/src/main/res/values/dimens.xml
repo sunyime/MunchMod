@@ -10,5 +10,5 @@
 
     <!-- Image Sizes -->
     <dimen name="icon_thumbnail_size">48dp</dimen>
-    <dimen name="icon_size">192dp</dimen>
+    <dimen name="icon_size">81dp</dimen>
 </resources>

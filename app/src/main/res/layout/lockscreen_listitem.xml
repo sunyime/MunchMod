@@ -2,61 +2,80 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:backgroundTint="@color/color_overlay">
+    android:layout_height="match_parent">
     <ImageView
         android:id="@+id/background_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/lockscreen"
-        />
+        android:scaleType="centerCrop"
+        android:src="@drawable/lockscreen"/>
+    <View
+        android:id="@+id/background_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_black_25"/>
+
     <LinearLayout
         android:id="@+id/data_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="bottom|center_horizontal"
-        android:backgroundTint="@color/colorPrimaryDark">
-        <View style="@style/DividerStyle"/>
-        <TextView
-            android:id="@+id/category_text"
-            style="@style/TextViewAppearance.Display"
-            android:text="Category" />
-        <ImageView
-            android:id="@+id/rating_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+        android:layout_gravity="bottom|center_horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/category_text"
+                style="@style/TextViewAppearance.Display"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="left"/>
+            <ImageView
+                android:id="@+id/rating_img"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical" />
+        </LinearLayout>
         <TextView
             android:id="@+id/name_text"
-            style="@style/TextViewAppearance.Headline"
-            android:text="Name" />
-
-        <!-- TextView
-            android:id="@+id/name_text"
-            style="@style/TextViewAppearance.Title"
-            android:text="title" / -->
-
+            style="@style/TextViewAppearance.Headline" />
         <TextView
             android:id="@+id/snippet_text"
             style="@style/TextViewAppearance.Body"
-            android:text="body" />
-
-        <TextView
-            android:id="@+id/distance_text"
-            style="@style/TextViewAppearance.Body"
-            android:text="10 mins walk" />
-
-        <TextView
+            android:maxLines="3"
+            android:ellipsize="end"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/map_action"
+                style="@style/TextViewAppearance.ActionCaption"
+                android:text="10 mins walk" />
+            <TextView
+                android:id="@+id/takeout_action"
+                style="@style/TextViewAppearance.ActionCaption"
+                android:text="Takeout" />
+            <TextView
+                android:id="@+id/reserve_action"
+                style="@style/TextViewAppearance.ActionCaption"
+                android:text="Reserve" />
+            <TextView
+                android:id="@+id/call_action"
+                style="@style/TextViewAppearance.ActionCaption"
+                android:background="@drawable/action_text_bg"
+                android:text="Call" />
+        <!-- TextView
             android:id="@+id/address_text"
             style="@style/TextViewAppearance.Caption"
-            android:text="address" />
-
-        <Button
+            android:text="address" / -->
+        </LinearLayout>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show More"
-            android:onClick="onShowMore"/>
+            style="@style/TextViewAppearance.ActionCaption"
+            android:text="SEE ALL"
+            android:onClick="onShowMore"
+            android:layout_gravity="center"/>
     </LinearLayout>
-
 </FrameLayout>
