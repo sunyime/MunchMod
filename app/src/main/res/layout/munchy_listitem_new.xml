@@ -18,114 +18,60 @@
             android:layout_height="@dimen/icon_size"
             android:layout_gravity="left|center_vertical"
             android:paddingRight="@dimen/single_padding"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="@dimen/single_padding"
             android:layout_marginBottom="@dimen/single_padding" />
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/single_margin">
+            android:gravity="center">
             <TextView
                 android:id="@+id/name_text"
-                style="@style/TextViewAppearance.Headline"
-                android:layout_width="match_parent"
+                style="@style/TextViewAppearance.Title"
+                android:textColor="@color/main_color_grey_600"/>
+            <ImageView
+                android:id="@+id/rating_img"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Evvia"
-                android:padding="@dimen/single_padding" />
+                android:layout_gravity="center" />
             <TextView
-                android:id="@+id/distance_text"
+                android:id="@+id/snippet_text"
                 style="@style/TextViewAppearance.Caption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="10 mins walk"
-                android:paddingTop="@dimen/single_padding"
-                android:paddingLeft="@dimen/single_padding"
-                android:paddingRight="@dimen/single_padding" />
-            <!-- TextView
-                android:id="@+id/category_text"
-                style="@style/TextViewAppearance.Headline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Category"
-                android:paddingLeft="@dimen/single_padding"
-                android:paddingRight="@dimen/single_padding"/ -->
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:layout_marginTop="@dimen/double_padding"
-                android:paddingLeft="@dimen/double_padding"
-                android:paddingBottom="@dimen/half_padding">
-
-                <TableRow android:id="@+id/address_row"
-                    android:padding="@dimen/single_padding"
-                    android:layout_gravity="fill_horizontal"
-                    android:gravity="left">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@android:drawable/ic_dialog_map"
-                        android:padding="@dimen/half_padding"/>
-                    <TextView
-                        android:id="@+id/address_text"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:gravity="left"
-                        android:padding="@dimen/half_padding"
-                        android:text="322 St. Martin Dr"
-                        android:autoLink="map"/>
-                </TableRow>
-                <TableRow android:id="@+id/phone_row"
-                    android:paddingLeft="@dimen/single_padding"
-                    android:paddingRight="@dimen/single_padding"
-                    android:layout_gravity="fill_horizontal"
-                    android:gravity="left">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/half_padding"
-                        android:src="@android:drawable/ic_dialog_dialer"/>
-                    <TextView
-                        android:id="@+id/phone_text"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:gravity="left"
-                        android:padding="@dimen/half_padding"
-                        android:text="415-5559463"
-                        android:autoLink="phone"/>
-                </TableRow>
-                <TableRow
-                    android:id="@+id/takeouturl_row"
-                    android:paddingLeft="@dimen/single_padding"
-                    android:paddingRight="@dimen/single_padding"
-                    android:paddingBottom="@dimen/single_padding"
-                    android:layout_gravity="fill_horizontal"
-                    android:gravity="left">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/half_padding"
-                        android:src="@android:drawable/ic_menu_search"/>
-
-                    <TextView
-                        android:id="@+id/takeouturl_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:gravity="right"
-                        android:padding="@dimen/half_padding"
-                        android:autoLink="web"
-                        />
-                </TableRow>
-
-            </TableLayout>
+                android:textColor="@color/main_color_grey_400"
+                android:maxLines="3"
+                android:ellipsize="end"/>
 
         </LinearLayout>
     </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/map_action"
+            style="@style/TextViewAppearance.ActionCaption"
+            android:text="10 mins walk" />
+        <TextView
+            android:id="@+id/takeout_action"
+            style="@style/TextViewAppearance.ActionCaption"
+            android:text="Takeout" />
+        <TextView
+            android:id="@+id/reserve_action"
+            style="@style/TextViewAppearance.ActionCaption"
+            android:text="Reserve" />
+        <TextView
+            android:id="@+id/call_action"
+            style="@style/TextViewAppearance.ActionCaption"
+            android:background="@drawable/action_text_bg"
+            android:layout_margin="1dp"
+            android:text="Call" />
+        <!-- TextView
+            android:id="@+id/address_text"
+            style="@style/TextViewAppearance.Caption"
+            android:text="address" / -->
+    </LinearLayout>
 
 </LinearLayout>

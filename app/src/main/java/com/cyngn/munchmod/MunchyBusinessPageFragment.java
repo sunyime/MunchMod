@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cyngn.munchmod.utils.AndroidUtils;
 import com.squareup.picasso.Picasso;
 import com.yelp.clientlib.entities.Business;
 
@@ -26,20 +27,83 @@ public class MunchyBusinessPageFragment extends Fragment {
         final ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.munchy_listitem_new, container, false);
 
         // Populate view
-        ImageView image = (ImageView) vg.findViewById(R.id.item_icon);
-        Picasso.with(container.getContext()).load(business.imageUrl()).into(image);
+        ImageView img = (ImageView) vg.findViewById(R.id.item_icon);
+        Picasso.with(container.getContext()).load(business.imageUrl()).into(img);
+
+        img = (ImageView) vg.findViewById(R.id.rating_img);
+        if (img != null) {
+            String url = business.ratingImgUrlLarge();
+            if (url == null) {
+                img.setVisibility(View.GONE);
+            } else {
+                Picasso.with(getContext()).load(url).into(img);
+            }
+        }
 
         TextView tv = (TextView) vg.findViewById(R.id.name_text);
         tv.setText(business.name());
 
-        /*
         tv = (TextView) vg.findViewById(R.id.category_text);
-        tv.setText(business.categories().get(0).name());
+        if (tv != null) {
+            tv.setText(business.categories().get(0).name());
+        }
 
         tv = (TextView) vg.findViewById(R.id.snippet_text);
-        tv.setText(business.snippetText());
-        */
+        if (tv != null) {
+            tv.setText(business.snippetText());
+        }
 
+        //
+        tv = (TextView) vg.findViewById(R.id.map_action);
+        final String geoUri = "geo:0,0?q=" + business.location().coordinate().latitude()
+                + ","
+                + business.location().coordinate().longitude()
+                + "("
+                + business.location().displayAddress().get(0)
+                + ")";
+
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AndroidUtils.startUriActivity(getActivity(), geoUri);
+            }
+        });
+
+        //TODO: get distance text
+        tv = (TextView) vg.findViewById(R.id.takeout_action);
+        if (business.eat24Url() != null) {
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AndroidUtils.startUriActivity(getActivity(), business.eat24Url());
+                }
+            });
+        }
+        else {
+            tv.setVisibility(View.GONE);
+        }
+
+        tv = (TextView) vg.findViewById(R.id.takeout_action);
+        if (business.reservationUrl() != null) {
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AndroidUtils.startUriActivity(getActivity(), business.reservationUrl());
+                }
+            });
+        }
+        else {
+            tv.setVisibility(View.GONE);
+        }
+
+        tv = (TextView) vg.findViewById(R.id.call_action);
+        //tv.setText(business.displayPhone());
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AndroidUtils.startCallActivity(getActivity(), business.phone());
+            }
+        });
         return vg;
     }
 

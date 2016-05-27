@@ -22,21 +22,22 @@
         android:orientation="vertical"
         android:layout_gravity="bottom|center_horizontal">
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/category_text"
                 style="@style/TextViewAppearance.Display"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="left"/>
-            <ImageView
-                android:id="@+id/rating_img"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical" />
+
         </LinearLayout>
+        <ImageView
+            android:id="@+id/rating_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/double_padding"
+            android:layout_gravity="right|center_vertical" />
         <TextView
             android:id="@+id/name_text"
             style="@style/TextViewAppearance.Headline" />
@@ -64,6 +65,7 @@
                 android:id="@+id/call_action"
                 style="@style/TextViewAppearance.ActionCaption"
                 android:background="@drawable/action_text_bg"
+                android:padding="3dp"
                 android:text="Call" />
         <!-- TextView
             android:id="@+id/address_text"

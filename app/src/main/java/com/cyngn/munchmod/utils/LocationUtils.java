@@ -44,4 +44,8 @@ public class LocationUtils {
     public static double computeDistance(LatLng latLng1, LatLng latLng2) {
         return SphericalUtil.computeDistanceBetween(latLng1, latLng2);
     }
+
+    public static String computeDistanceTimeText(LatLng latLng1, LatLng latLng2) {
+        return "10 mins walk";
+    }
 }

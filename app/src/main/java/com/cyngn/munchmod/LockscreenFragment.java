@@ -61,6 +61,9 @@ public class LockscreenFragment extends Fragment {
             final Business business = ((MunchApp) getActivity().getApplication()).
                     getYelpApiClient().getBusinessAt(position - 1);
 
+            if (business == null) {
+                return vg;
+            }
 
             ImageView img = (ImageView) vg.findViewById(R.id.background_img);
             img.setImageResource(pageId.imgResId);
