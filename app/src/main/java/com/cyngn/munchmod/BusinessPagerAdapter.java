@@ -12,17 +12,17 @@ import java.util.List;
 /**
  * Created by jzhang on 5/26/16.
  */
-public class BusinessPageAdapter extends FragmentStatePagerAdapter
+public class BusinessPagerAdapter extends FragmentStatePagerAdapter
                                     implements YelpApiClient.ResultCallback{
 
-    List<Business> mBusiness;
-    public BusinessPageAdapter(FragmentManager fm) {
+    List<Business> mBusinesses;
+    public BusinessPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public void onBusinessesLoaded(List<Business> business) {
-        mBusiness = business;
+        mBusinesses = business;
         notifyDataSetChanged();
     }
 
@@ -30,20 +30,27 @@ public class BusinessPageAdapter extends FragmentStatePagerAdapter
     public Fragment getItem(int position) {
         Fragment f = new MunchyBusinessPageFragment();
         Bundle b = new Bundle();
-        b.putString("url", mBusiness.get(position).imageUrl());
+        b.putString("url", mBusinesses.get(position).imageUrl());
         f.setArguments(b);
         return  f;
     }
 
     public int getPositionForBusiness(Business b){
-        for(int i = 0; i< mBusiness.size();i++){
-            if(b.equals(mBusiness.get(i))) return i;
+        for(int i = 0; i< mBusinesses.size(); i++){
+            if(b.equals(mBusinesses.get(i))) return i;
         }
         return 0;
     }
 
+    public Business getBusinessForPosition(int position){
+        if (position > 0 && position < mBusinesses.size()) {
+            return mBusinesses.get(position);
+        }
+        return null;
+    }
+
     @Override
     public int getCount() {
-        return mBusiness == null ? 0 : mBusiness.size();
+        return mBusinesses == null ? 0 : mBusinesses.size();
     }
 }

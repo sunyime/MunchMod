@@ -7,7 +7,7 @@ import com.cyngn.munchmod.data.CurrentLocationClient;
 import com.cyngn.munchmod.data.YelpApiClient;
 
 /**
- * The Munch Application
+ * The MunchConstants Application
  *
  * TODO: put any global data here
  */

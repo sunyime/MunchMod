@@ -2,6 +2,7 @@ package com.cyngn.munchmod;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.yelp.clientlib.entities.Business;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * MapFragment: TODO: move all the google maps functionality
@@ -37,8 +39,7 @@ public class MapFragment extends SupportMapFragment implements
         GoogleMap.OnCameraChangeListener,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMapClickListener,
-        GoogleMap.OnMarkerClickListener
-    {
+        GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "MapFragment";
     private static final boolean DEBUG = true;
@@ -78,6 +79,9 @@ public class MapFragment extends SupportMapFragment implements
     private float mZoomLevel = MAP_DEFAULT_ZOOM_LEVEL;
     private boolean mIsSelfCameraChange = false;
     private Map<Marker, Business> mMarkerMap = new HashMap<>();
+
+    //private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
     private MapListener mListener = null;
 
@@ -135,6 +139,7 @@ public class MapFragment extends SupportMapFragment implements
         mPinLocationView = (ImageView) view.findViewById(R.id.location_pin_button);
         mCurrentLocationButton = (ImageButton)view.findViewById(R.id.location_current_button);
         */
+
         // Request the map
         getMapAsync(this);
         return mContainer;
@@ -153,6 +158,7 @@ public class MapFragment extends SupportMapFragment implements
         return mContainer.getHeight();
     }
 
+    public View getContainer() { return mContainer; }
 
     public void setVisibility(int visibility) {
         mContainer.setVisibility(visibility);
@@ -326,6 +332,21 @@ public class MapFragment extends SupportMapFragment implements
          return false;
      }
 
+    /**
+     * Select a business that's already shown
+     * @param business
+     */
+    public void selectBusiness(Business business) {
+
+        Marker marker = findMarker(business);
+        if (marker == null) {
+            Log.e(TAG, "ERROR: selectBusiness cannot find business " + business.name());
+            return;
+        }
+
+        marker.showInfoWindow();
+        updateLocation(marker.getPosition(), true);
+    }
 
     /**
      * show a list of businesses
@@ -358,6 +379,16 @@ public class MapFragment extends SupportMapFragment implements
                 .snippet(business.snippetText());
     }
 
+    private Marker findMarker(Business business) {
+        Set<Map.Entry<Marker, Business>> entries = mMarkerMap.entrySet();
+
+        for (Map.Entry<Marker, Business> entry : entries) {
+            if (entry.getValue().equals(business)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 
     private void updateLocation(LatLng newLocation, boolean mapUpdateNeeded) {
         mLatLng = newLocation;

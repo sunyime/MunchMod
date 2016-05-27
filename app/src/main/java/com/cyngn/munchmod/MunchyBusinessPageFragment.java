@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
  * Created by jzhang on 5/26/16.
  */
 public class MunchyBusinessPageFragment extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
