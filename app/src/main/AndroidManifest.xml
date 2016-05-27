@@ -34,10 +34,22 @@
         <activity
             android:name=".MunchActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_maps">
+            android:taskAffinity="com.cyngn.lunchmod.munch"
+            android:label="@string/title_activity_munch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".LockscreenActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.cyngn.lunchmod.lockscreen"
+            android:label="@string/title_activity_lockscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.DEFAULT" />
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

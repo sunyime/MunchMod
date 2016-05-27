@@ -1,5 +1,6 @@
 package com.cyngn.munchmod;
 
+import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.graphics.Point;
 
 import com.cyngn.munchmod.data.CurrentLocationClient;
+import com.cyngn.munchmod.utils.LocationUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -80,8 +82,6 @@ public class MapFragment extends SupportMapFragment implements
     private boolean mIsSelfCameraChange = false;
     private Map<Marker, Business> mMarkerMap = new HashMap<>();
 
-    //private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
 
     private MapListener mListener = null;
 
@@ -217,6 +217,11 @@ public class MapFragment extends SupportMapFragment implements
         if (DEBUG) {
             Log.d(TAG, "onCurrentLocation");
         }
+        Activity activity = getActivity();
+        if (activity instanceof MunchActivity) {
+            // clear location to perform the search again
+            ((MunchActivity)activity).clearLastLocation();
+        }
         stopCurrentLocation();
         updateLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
     }
@@ -280,7 +285,7 @@ public class MapFragment extends SupportMapFragment implements
         // TODO: user is changing map location, kick off another
         // User has moved pin to new location
         final LatLng latLng = getCenterLatLng();
-        if (SphericalUtil.computeDistanceBetween(latLng, mLatLng) < 5000) {
+        if (LocationUtils.isNegligibleLocationChange(latLng, mLatLng)) {
             return;
         }
         if (DEBUG) {
@@ -411,6 +416,7 @@ public class MapFragment extends SupportMapFragment implements
             Log.d(TAG, "showLocation called when map is still NULL!");
             return;
         }
+        mIsSelfCameraChange = true;
         // Radius Bounds
         if (mLatLngBounds != null) {
             if (DEBUG) {

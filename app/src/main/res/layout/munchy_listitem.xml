@@ -2,12 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
+    android:layout_height="match_parent"
     android:background="@color/color_logo_bg">
 
-    <ImageView
-        android:id="@+id/item_icon"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="320dp" />
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/name_text"
+                style="@style/TextViewAppearance.Headline"
+                android:layout_gravity="right|center_vertical"
+                android:text="Name" />
+            <ImageView
+                android:id="@+id/item_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="right|center_vertical"
+                android:backgroundTint="@android:color/background_dark"
+                android:padding="2dp"/>
+        </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/snippet_text"
+        style="@style/TextViewAppearance.Caption"
+        android:text="snippet" />
+
+    <TextView
+        android:id="@+id/category_text"
+        style="@style/TextViewAppearance.Body"
+        android:text="body" />
+
+    </FrameLayout>
+
 </LinearLayout>

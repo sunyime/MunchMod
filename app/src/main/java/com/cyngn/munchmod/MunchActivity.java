@@ -1,14 +1,11 @@
 package com.cyngn.munchmod;
 
-import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.support.v4.view.ViewPager;
 
-
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 
 import android.util.Log;
 import android.view.View;
@@ -32,16 +29,18 @@ public class MunchActivity extends FragmentActivity implements
     private static final boolean DEBUG = false;
     private static final String TAG = "MunchActivity";
 
-    private static final double SEARCH_RADIUS = 5000; //I think this is 5km?
     private static final long DURATION_MAP_SPLASH_CROSSFADE_MS = 450;
-    private static final long DURATION_LIST_FADE_MS = 250;
+
 
     private YelpApiClient mYelpApiClient;
     private CurrentLocationClient mCurrentLocationClient;
-    private MapFragment mMapFragment;
-    private ViewGroup mSplash;
-    //private ViewGroup mTempItemPlaceHolder; //temp: to be replaced by the list
+    private LatLng mLastSearchLatLng = null;
 
+    private ViewGroup mMapContainer;
+    private ViewGroup mSplash;
+
+    // map components
+    private MapFragment mMapFragment;
     private ViewPager mBusinessPager;
     private BusinessPagerAdapter mBusinessAdapter;
 
@@ -59,25 +58,30 @@ public class MunchActivity extends FragmentActivity implements
         mCurrentLocationClient.requestPermissions(this);
 
         setContentView(R.layout.activity_munch);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+        // Initialize map + detail view
+        mMapContainer = (ViewGroup) findViewById(R.id.map_container);
         mMapFragment = (MapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-
         mMapFragment.setLocationListener(this);
-
-        mSplash = (ViewGroup) findViewById(R.id.splash);
-        TextView splashText = (TextView) findViewById(R.id.splash_text);
-        MunchCustomizer.setSplashText(splashText);
-
         mBusinessPager = (ViewPager)findViewById(R.id.pager);
         mBusinessAdapter = new BusinessPagerAdapter(getSupportFragmentManager());
         mBusinessPager.setAdapter(mBusinessAdapter);
-
-
+        mBusinessPager.setOnPageChangeListener(this);
         mYelpApiClient.addListener(mBusinessAdapter);
 
+        // Initialize Splash View
+        mSplash = (ViewGroup) findViewById(R.id.splash);
+        TextView splashText = (TextView) findViewById(R.id.splash_text);
+        MunchCustomizer.setSplashText(splashText);
+       /* final String action = getIntent().getAction();
+        if (action != null) {
+            TextView splashText = (TextView) findViewById(R.id.splash_text);
+            MunchCustomizer.setSplashText(splashText);
+        } else {
+            mSplash.setVisibility(View.GONE);
+        } */
     }
-
 
 
     @Override
@@ -117,18 +121,33 @@ public class MunchActivity extends FragmentActivity implements
     }
 
 
+    /**
+     * Called by MapFragment to trigger a
+     */
+    void clearLastLocation() {
+        mLastSearchLatLng = null;
+    }
+
     @Override
     public void onMapLocationChanged(LatLng latLng) {
-        if (isSplashVisible()) {
-            mMapFragment.animateIn(DURATION_MAP_SPLASH_CROSSFADE_MS);
-            mSplash.animate().setDuration(DURATION_MAP_SPLASH_CROSSFADE_MS).alpha(0f);
+        if (DEBUG) {
+            Log.d(TAG, "onMapLocationChanged");
         }
-        mYelpApiClient.loadPlaces(LocationUtils.toBounds(latLng, SEARCH_RADIUS),
-                MunchCustomizer.getSearchTerms(this));
+
+        if (mLastSearchLatLng == null /*||
+                LocationUtils.computeDistance(mLastSearchLatLng, latLng) > SEARCH_RADIUS * 2 */) {
+            mLastSearchLatLng = latLng;
+            mYelpApiClient.loadPlaces(this, latLng);
+
+            if (isSplashVisible()) {
+                mMapFragment.animateIn(DURATION_MAP_SPLASH_CROSSFADE_MS);
+                mSplash.animate().setDuration(DURATION_MAP_SPLASH_CROSSFADE_MS).alpha(0f);
+            }
+        }
     }
 
     private boolean isSplashVisible() {
-        return mSplash.getAlpha() > 0 && mSplash.getVisibility() == View.VISIBLE;
+        return mSplash.getVisibility() == View.VISIBLE && mSplash.getAlpha() > 0;
     }
 
 
@@ -137,28 +156,26 @@ public class MunchActivity extends FragmentActivity implements
         mMapFragment.showBusinesses(businesses);
     }
 
+
+    @Override
+    public void onMapClicked() {
+        // mBusinessPager.animate().setDuration(DURATION_LIST_FADE_MS).alpha(0);
+    }
+
     @Override
     public void onMapItemClicked(Business business) {
         showBusinessDetails(business);
     }
 
-    @Override
-    public void onMapClicked() {
-       // mBusinessPager.animate().setDuration(DURATION_LIST_FADE_MS).alpha(0);
-    }
 
     private void showBusinessDetails(Business business) {
         if (DEBUG) {
             Log.d(TAG, "showBusinessDetails");
         }
-        int pos = mBusinessAdapter.getPositionForBusiness(business);
-        mBusinessPager.setCurrentItem(pos, true);
-
-        /*
-        mBusinessPager.setVisibility(View.VISIBLE);
-        if (mBusinessPager.getAlpha() < 1f) {
-            mBusinessPager.animate().setDuration(DURATION_LIST_FADE_MS).alpha(1);
-        } */
+        int pos = mYelpApiClient.getPositionForBusiness(business);
+        if (pos >= 0) {
+            mBusinessPager.setCurrentItem(pos, true);
+        }
     }
 
     @Override
@@ -166,8 +183,10 @@ public class MunchActivity extends FragmentActivity implements
         if (DEBUG) {
             Log.d(TAG, "onPageScrolled");
         }
-        final Business business = mBusinessAdapter.getBusinessForPosition(position);
-        mMapFragment.selectBusiness(business);
+        final Business business = mYelpApiClient.getBusinessAt(position);
+        if (business != null) {
+            mMapFragment.selectBusiness(business);
+        }
     }
 
     @Override
@@ -184,36 +203,4 @@ public class MunchActivity extends FragmentActivity implements
         }
     }
 
-    public static class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return null; //PlaceholderFragment.newInstance(position + 1);
-        }
-
-            @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }
-    }
 }

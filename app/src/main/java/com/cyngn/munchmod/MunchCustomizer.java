@@ -50,33 +50,36 @@ public class MunchCustomizer {
 
         public static TimeDayMode getMode(Calendar currentTime) {
             final int dayOfWeek = currentTime.get(Calendar.DAY_OF_WEEK);
-            boolean isWeekend = dayOfWeek < Calendar.MONDAY;
+            boolean isWeekday = dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY;
+            if(DEBUG) {
+                Log.d(TAG, "getMode dayOfWeek=" + dayOfWeek);
+            }
 
             final int hourOfDay = currentTime.get(Calendar.HOUR_OF_DAY);
 
             // Morning hours
             if (hourOfDay >= 6 && hourOfDay < 11) {
-                return isWeekend? MORNING : WEEKEND_MORNING;
+                return isWeekday? MORNING : WEEKEND_MORNING;
             }
             // Lunch hours
             if (hourOfDay >= 11 && hourOfDay < 14) {
-                return isWeekend? LUNCH : WEEKEND_LUNCH;
+                return isWeekday? LUNCH : WEEKEND_LUNCH;
             }
             // Afternoon hours
             if (hourOfDay >= 14 && hourOfDay < 17) {
-                return isWeekend? AFTERNOON : WEEKEND_AFTERNOON;
+                return isWeekday? AFTERNOON : WEEKEND_AFTERNOON;
             }
             // Evening hours
             if (hourOfDay >= 17 && hourOfDay < 21) {
-                return isWeekend? EVENING : WEEKEND_EVENING;
+                return isWeekday? EVENING : WEEKEND_EVENING;
             }
             // Night hours
             if (hourOfDay >= 17 && hourOfDay < 23) {
-                return isWeekend? NIGHT : WEEKEND_NIGHT;
+                return isWeekday? NIGHT : WEEKEND_NIGHT;
             }
             // Late night hours
             if (hourOfDay >= 23 || hourOfDay < 6) {
-                return isWeekend? LATE_NIGHT : WEEKEND_LATE_NIGHT;
+                return isWeekday? LATE_NIGHT : WEEKEND_LATE_NIGHT;
             }
 
             return DEFAULT;

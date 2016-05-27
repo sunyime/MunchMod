@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Munch</string>
-    <string name="title_activity_maps">Munch</string>
+    <string name="title_activity_munch">Munch</string>
+    <string name="title_activity_lockscreen">Lockscreen</string>
 
     <string name="greeting_text_default">MMM Munchy Time</string>
     <string name="greeting_text_morning">Good Morning Munchy</string>
     <string name="greeting_text_lunch">Lunchy Munchy Time</string>
-    <string name="greeting_text_afternoon">Afternoon Munchies </string>
+    <string name="greeting_text_afternoon">Afternoon Munchy Time </string>
     <string name="greeting_text_evening">Evening Munchy Time</string>
     <string name="greeting_text_night">Nighttime Munchies</string>
     <string name="greeting_text_late_night">NightOwl Munchy Time</string>
@@ -13,8 +14,8 @@
     <string name="greeting_text_weekend_lunch">Brunch Time</string>
     <string name="greeting_text_weekend_afternoon">Weekend Afternoon</string>
     <string name="greeting_text_weekend_evening">Dinner Munchy Time</string>
-    <string name="greeting_text_weekend_night">Food and Drinks Time</string>
-    <string name="greeting_text_weekend_late_night">Weekend NightOwl Munchy Time </string>
+    <string name="greeting_text_weekend_night">Weekend Food and Drinks Time</string>
+    <string name="greeting_text_weekend_late_night">Weekend Late Night Munchy Time </string>
 
     <string name="search_term_default">food</string>
     <string name="search_term_morning">food, breakfast, coffee</string>
@@ -22,12 +23,12 @@
     <string name="search_term_afternoon">food, snack</string>
     <string name="search_term_evening">dinner</string>
     <string name="search_term_night">food, drinks</string>
-    <string name="search_term_late_night">food, drinks</string>
+    <string name="search_term_late_night">food, late night</string>
     <string name="search_term_weekend_morning">breakfast, coffee, brunch</string>
     <string name="search_term_weekend_lunch">brunch</string>
     <string name="search_term_weekend_afternoon">lunch, drinks</string>
     <string name="search_term_weekend_evening">dinner</string>
     <string name="search_term_weekend_night">food, drinks</string>
-    <string name="search_term_weekend_late_night">food</string>
+    <string name="search_term_weekend_late_night">food, late night</string>
 
 </resources>
