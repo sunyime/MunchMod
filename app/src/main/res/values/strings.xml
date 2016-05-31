@@ -9,19 +9,19 @@
     <string name="takeout_action">Takeout</string>
     <string name="call_action">Call</string>
 
-    <string name="greeting_text_default">MMM Munchy Time</string>
-    <string name="greeting_text_morning">Good Morning Munchy</string>
-    <string name="greeting_text_lunch">Lunchy Munchy Time</string>
-    <string name="greeting_text_afternoon">Afternoon Munchy Time </string>
-    <string name="greeting_text_evening">Evening Munchy Time</string>
+    <string name="greeting_text_default">Time for Munching</string>
+    <string name="greeting_text_morning">Breakfast and Coffee Time</string>
+    <string name="greeting_text_lunch">Lunch Time </string>
+    <string name="greeting_text_afternoon">Afternoon Munchies? </string>
+    <string name="greeting_text_evening">Dinner Time</string>
     <string name="greeting_text_night">Nighttime Munchies</string>
     <string name="greeting_text_late_night">NightOwl Munchy Time</string>
     <string name="greeting_text_weekend_morning">Good Morning Munch buddy</string>
     <string name="greeting_text_weekend_lunch">Brunch Time</string>
-    <string name="greeting_text_weekend_afternoon">Weekend Afternoon</string>
-    <string name="greeting_text_weekend_evening">Dinner Munchy Time</string>
-    <string name="greeting_text_weekend_night">Weekend Food and Drinks Time</string>
-    <string name="greeting_text_weekend_late_night">Weekend Late Night Munchy Time </string>
+    <string name="greeting_text_weekend_afternoon">Weekend Afternoon Drinks &amp; Lunch</string>
+    <string name="greeting_text_weekend_evening">Weekend Dinner</string>
+    <string name="greeting_text_weekend_night">Weekend Food and Drinks </string>
+    <string name="greeting_text_weekend_late_night">Weekend Late Night Food Time </string>
 
     <string name="search_term_default">food</string>
     <string name="search_term_morning">food, breakfast, coffee</string>
