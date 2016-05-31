@@ -5,9 +5,9 @@
 
     <string name="distance_walk_mins">%1$s mins walk</string>
     <string name="distance_drive_mins">%1$s mins drive</string>
-    <string name="reserve_action">reserve</string>
-    <string name="takeout_action">takeout</string>
-    <string name="call_action">call</string>
+    <string name="reserve_action">Reserve</string>
+    <string name="takeout_action">Takeout</string>
+    <string name="call_action">Call</string>
 
     <string name="greeting_text_default">MMM Munchy Time</string>
     <string name="greeting_text_morning">Good Morning Munchy</string>

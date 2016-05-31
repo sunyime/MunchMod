@@ -31,6 +31,7 @@
             <TextView
                 android:id="@+id/name_text"
                 style="@style/TextViewAppearance.Title"
+                android:maxLines="2"
                 android:textColor="@color/main_color_grey_600"/>
             <ImageView
                 android:id="@+id/rating_img"
