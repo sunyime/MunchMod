@@ -6,4 +6,4 @@
         android:visibility="gone"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="@dimen/business_pager_height" />

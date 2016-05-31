@@ -39,7 +39,6 @@ public class MunchActivity extends FragmentActivity implements
     private CurrentLocationClient mCurrentLocationClient;
     private LatLng mLastSearchLatLng = null;
 
-    private ViewGroup mMapContainer;
     private ViewGroup mSplash;
 
     // map components
@@ -63,7 +62,6 @@ public class MunchActivity extends FragmentActivity implements
         setContentView(R.layout.activity_munch);
 
         // Initialize map + detail view
-        mMapContainer = (ViewGroup) findViewById(R.id.map_container);
         mMapFragment = (MapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mMapFragment.setLocationListener(this);
@@ -80,14 +78,14 @@ public class MunchActivity extends FragmentActivity implements
 
 
         animator = (ValueAnimator) AnimatorInflater.loadAnimator(this,R.animator.slide_in);
-
+        final int height = getResources().getDimensionPixelSize(R.dimen.business_pager_height);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float cur = animation.getAnimatedFraction();
-                //TODO: DON'T USE CONSTANT.
-                mBusinessPager.getLayoutParams().height = (int)(650*cur);
-                mMapFragment.setMapIconPadding(cur);
+                int cur_height = (int)(height*cur);
+                mBusinessPager.getLayoutParams().height = cur_height;
+                mMapFragment.setMapIconPadding(cur_height);
                 mBusinessPager.requestLayout();
             }
         });
