@@ -43,7 +43,6 @@
                 android:textColor="@color/main_color_grey_400"
                 android:maxLines="3"
                 android:ellipsize="end"/>
-
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -57,21 +56,11 @@
         <TextView
             android:id="@+id/takeout_action"
             style="@style/TextViewAppearance.ActionCaption"
-            android:text="Takeout" />
+            android:text="@string/takeout_action" />
         <TextView
             android:id="@+id/reserve_action"
             style="@style/TextViewAppearance.ActionCaption"
-            android:text="Reserve" />
-        <TextView
-            android:id="@+id/call_action"
-            style="@style/TextViewAppearance.ActionCaption"
-            android:background="@drawable/action_text_bg"
-            android:layout_margin="1dp"
-            android:text="Call" />
-        <!-- TextView
-            android:id="@+id/address_text"
-            style="@style/TextViewAppearance.Caption"
-            android:text="address" / -->
+            android:text="@string/reserve_action" />
     </LinearLayout>
 
 </LinearLayout>

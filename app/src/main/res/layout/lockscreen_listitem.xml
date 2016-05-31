@@ -60,13 +60,9 @@
             <TextView
                 android:id="@+id/reserve_action"
                 style="@style/TextViewAppearance.ActionCaption"
-                android:text="Reserve" />
-            <TextView
-                android:id="@+id/call_action"
-                style="@style/TextViewAppearance.ActionCaption"
                 android:background="@drawable/action_text_bg"
-                android:padding="3dp"
-                android:text="Call" />
+                android:text="Reserve" />
+
         <!-- TextView
             android:id="@+id/address_text"
             style="@style/TextViewAppearance.Caption"

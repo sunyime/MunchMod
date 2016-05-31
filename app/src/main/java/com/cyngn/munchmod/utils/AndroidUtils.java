@@ -60,7 +60,7 @@ public class AndroidUtils {
      * Start a Call activity
      */
     public static boolean startCallActivity(Context context, String phone) {
-        Intent i = new Intent(Intent.ACTION_CALL);
+        Intent i = new Intent(Intent.ACTION_DIAL);
         i.setData(Uri.parse("tel:" + phone));
         return startActivity(context, i);
     }

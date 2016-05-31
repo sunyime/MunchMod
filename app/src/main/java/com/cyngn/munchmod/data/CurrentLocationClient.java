@@ -29,11 +29,12 @@ public class CurrentLocationClient implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "CurrentLocationLoader";
+    private static final boolean DEBUG = true;
 
     // Permissions
     private static final String[] PERMISSIONS = new String[] {
         Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION
     };
 
     /**
@@ -75,6 +76,13 @@ public class CurrentLocationClient implements
         return requestCode;
     }
 
+    /**
+     * Get the last location that was qcquired
+     * @return
+     */
+    public Location getLastLocation() {
+        return mLastLocation;
+    }
 
     public void addListener(final CurrentLocationClient.ResultCallback callback) {
         if (mCallbacks.size() == 0) {
@@ -128,7 +136,9 @@ public class CurrentLocationClient implements
     private void connect() {
         if (!mLocationClient.isConnected() &&
                 !mLocationClient.isConnecting()) {
-            Log.d(TAG, "connect");
+            if (DEBUG) {
+                Log.d(TAG, "connect");
+            }
 
             mLocationClient.connect();
         }

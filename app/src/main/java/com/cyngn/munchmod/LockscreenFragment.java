@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyngn.munchmod.utils.AndroidUtils;
+import com.cyngn.munchmod.utils.LocationUtils;
 import com.squareup.picasso.Picasso;
 import com.yelp.clientlib.entities.Business;
 
@@ -87,6 +88,12 @@ public class LockscreenFragment extends Fragment {
 
             //
             tv = (TextView) vg.findViewById(R.id.map_action);
+            final String distanceStr = LocationUtils.formatDistanceTimeText(
+                    getActivity(),
+                    LocationUtils.coordinateToLatLng(business.location().coordinate()),
+                    LocationUtils.locationToLatLng(((MunchApp) getActivity().getApplication()).getCurrentLocationClient().getLastLocation())
+            );
+            tv.setText(distanceStr);
             final String geoUri = "geo:0,0?q=" + business.location().coordinate().latitude()
                     + ","
                     + business.location().coordinate().longitude()
@@ -101,7 +108,6 @@ public class LockscreenFragment extends Fragment {
                 }
             });
 
-            //TODO: get distance text
             tv = (TextView) vg.findViewById(R.id.takeout_action);
             if (business.eat24Url() != null) {
                 tv.setOnClickListener(new View.OnClickListener() {
@@ -112,10 +118,15 @@ public class LockscreenFragment extends Fragment {
                 });
             }
             else {
-                tv.setVisibility(View.GONE);
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AndroidUtils.startCallActivity(getActivity(), business.phone());
+                    }
+                });
             }
 
-            tv = (TextView) vg.findViewById(R.id.takeout_action);
+            tv = (TextView) vg.findViewById(R.id.reserve_action);
             if (business.reservationUrl() != null) {
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -125,9 +136,14 @@ public class LockscreenFragment extends Fragment {
                 });
             }
             else {
-                tv.setVisibility(View.GONE);
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AndroidUtils.startCallActivity(getActivity(), business.phone());
+                    }
+                });
             }
-
+            /*
             tv = (TextView) vg.findViewById(R.id.call_action);
             //tv.setText(business.displayPhone());
             tv.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +151,7 @@ public class LockscreenFragment extends Fragment {
                 public void onClick(View v) {
                     AndroidUtils.startCallActivity(getActivity(), business.phone());
                 }
-            });
+            }); */
         }
 
         return vg;
